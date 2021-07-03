@@ -11,8 +11,8 @@ pub async fn set<K: AsRef<ffi::OsStr>, V: AsRef<ffi::OsStr>>(k: K, v: V) {
     env::set_var(k, v)
 }
 
-pub async fn get<K: AsRef<ffi::OsStr>>(k: K) -> String {
-   env::var(k).map(|val| val).unwrap()
+pub async fn get<K: AsRef<ffi::OsStr>>(k: K) -> Result<String, env::VarError> {
+   env::var(k).map(|val| val)
 }
 
 #[cfg(test)]
