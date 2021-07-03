@@ -11,37 +11,30 @@ pub async fn set<K: AsRef<ffi::OsStr>, V: AsRef<ffi::OsStr>>(k: K, v: V) {
     env::set_var(k, v)
 }
 
-pub async fn get<K: AsRef<ffi::OsStr>>(k: K) -> Option<String>  {
-    if let Some(val) = env::var_os(k) {
-        Some(val.into_string().unwrap())
-    } else {
-        None
-    }
+pub async fn get<K: AsRef<ffi::OsStr>>(k: K) -> String {
+   env::var(k).map(|val| val).unwrap()
 }
 
 #[cfg(test)]
 mod tests {
     use std::io;
-    use std::env;
 
     #[async_std::test]
     async fn set_env_var() -> io::Result<()> {
         super::set("TEST_VAR", "TEST_VALUE").await;
 
-        match env::var("TEST_VAR") {
-            Ok(val) => Ok(assert_eq!(&val, "TEST_VALUE")),
-            Err(_) => panic!("Test failed env not foud.")
-        }
+        assert_eq!(&super::get("TEST_VAR").await, "TEST_VALUE");
+
+        Ok(())
     }
 
     #[async_std::test]
     async fn get_env_var() -> io::Result<()> {
         super::set("TEST_VAR", "SOME_VALUE").await;
+        
+        assert_eq!(&super::get("TEST_VAR").await, "SOME_VALUE");
 
-        match super::get("TEST_VAR").await {
-            Some(value) => Ok(assert_eq!(&value, "SOME_VALUE")),
-            None => panic!("Test failed env not found.")
-        }
+        Ok(())
     }
     
     #[async_std::test]
