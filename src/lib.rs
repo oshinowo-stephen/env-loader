@@ -11,9 +11,9 @@ pub async fn set<K: AsRef<ffi::OsStr>, V: AsRef<ffi::OsStr>>(k: K, v: V) {
     env::set_var(k, v)
 }
 
-pub async fn get<K: AsRef<ffi::OsStr>>(k: K) -> Option<ffi::OsString>  {
+pub async fn get<K: AsRef<ffi::OsStr>>(k: K) -> Option<String>  {
     if let Some(val) = env::var_os(k) {
-        Some(val)
+        Some(val.into_string().unwrap())
     } else {
         None
     }
@@ -36,9 +36,9 @@ mod tests {
 
     #[async_std::test]
     async fn get_env_var() -> io::Result<()> {
-        super::set("TEST_VAR_2", "SOME_VALUE").await;
+        super::set("TEST_VAR", "SOME_VALUE").await;
 
-        match super::get("TEST_VAR_2").await {
+        match super::get("TEST_VAR").await {
             Some(value) => Ok(assert_eq!(&value, "SOME_VALUE")),
             None => panic!("Test failed env not found.")
         }
@@ -46,11 +46,11 @@ mod tests {
     
     #[async_std::test]
     async fn rm_env_var() -> io::Result<()> {
-        super::set("TEST_VAR_3", "OTHER_VALUE").await;
+        super::set("TEST_VAR", "OTHER_VALUE").await;
 
-        super::rm("TEST_VAR_3").await;
+        super::rm("TEST_VAR").await;
 
-        assert_eq!(super::get("TEST_VAR_3").await, None);
+        assert_eq!(super::get("TEST_VAR").await, None);
 
         Ok(())
     }
@@ -58,18 +58,9 @@ mod tests {
     #[async_std::test]
     async fn rm_env_after_set() -> io::Result<()> {
         {
-            super::set("TEST_VAR_4", "SOME_OTHER_VALUE").await;
+            super::set("TEST_VAR", "SOME_OTHER_VALUE").await;
         }
         
-        super::rm("TEST_VAR_4").await;
-
-        assert_eq!(super::get("TEST_VAR_4").await, None);
-
-        Ok(())
-    }
-
-    #[async_std::test]
-    async fn rm_from_diff_process() -> io::Result<()> {
         super::rm("TEST_VAR").await;
 
         assert_eq!(super::get("TEST_VAR").await, None);
