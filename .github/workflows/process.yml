@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: PRE-SCRIPTS
-      - run: |
+      run: |
           chmod +x "${GITHUB_WORKSPACE}/.bin/mock-data.sh"
           
           "${GITHUB_WORKSPACE}/.bin/mock-data.sh"
