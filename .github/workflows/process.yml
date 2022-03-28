@@ -12,6 +12,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: PRE-SCRIPTS
+      - run: |
+          chmod +x "${GITHUB_WORKSPACE}/.bin/mock-data.sh"
+          
+          "${GITHUB_WORKSPACE}/.bin/mock-data.sh"
       - name: INSTALL
         uses: actions-rs/toolchain@v1
         with:

@@ -17,6 +17,7 @@ pub fn load() -> io::Result<()> {
 
         let mut secret_content = String::new();
 
+
         let mut file = File::open(secret.path())?;
 
         file.read_to_string(&mut secret_content)?;
@@ -27,3 +28,16 @@ pub fn load() -> io::Result<()> {
     Ok(())
 }
 
+#[cfg(test)]
+mod tests {
+    use std::env;
+
+    #[test]
+    fn the_basic_laod() {
+        super::load().unwrap();
+
+        let result = env::var("AKKO").expect("Unable to load var.");
+
+        assert_eq!(&result, "Little Witch Academia - Akko")
+    }
+}

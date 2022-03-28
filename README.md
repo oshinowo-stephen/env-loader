@@ -1,9 +1,7 @@
-# docker-secret-loader
+# secrets-to-env
 
-Loads docker-secrets into the environment written in Rust!
+Loads the secrets located in `/run/secrets` **(they will be placed there by default by docker)** into the system
+enviornment. To use simply:
 
-## Example
+`secrets-to-env::load()`
 
-```
-secrets::load()
-```
