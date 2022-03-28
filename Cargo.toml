@@ -4,4 +4,7 @@ version = "0.1.0"
 authors = ["whoastonic <kingstonicthe1@gmail.com>"]
 description = "Loads the secreets from docker into the systems environment!"
 edition = "2018"
-
+license = "MIT"
+repository = "https://github.com/whoastonic/env-loader"
+readme = "README.md"
+keywords = ["docker", "secrets", "env"]
